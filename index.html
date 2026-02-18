@@ -137,10 +137,15 @@ body.dark .projects .card { background: #292929; }
 .projects .btn { margin-top: 8px; }
 
 /* --- Experience / Testimonials --- */
-.experience, .testimonials { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 20px; margin-top: 20px; }
-.experience div, .testimonials div { padding: 15px; border-radius: 8px; background: #f0f4f8; }
-body.dark .experience div, body.dark .testimonials div { background: #292929; }
-.testimonials div p { font-style: italic; }
+#experience .timeline { position:relative; margin:30px 0; }
+#experience .timeline::before { content:""; position:absolute; left:50%; width:4px; height:100%; background:var(--secondary); transform:translateX(-50%);}
+.timeline-item { padding:20px; position:relative; width:50%; }
+.timeline-item:nth-child(odd) { left:0; }
+.timeline-item:nth-child(even) { left:50%; }
+.timeline-item h3 { margin-bottom:5px; color:var(--primary);}
+.timeline-item p { margin-bottom:10px; }
+.timeline-item::before { content:""; position:absolute; width:15px; height:15px; background:var(--accent); border-radius:50%; top:20px; right:-8px; }
+.timeline-item:nth-child(even)::before { left:-8px; }
 
 /* --- Contact --- */
 .social-links {
@@ -255,17 +260,20 @@ footer { text-align: center; padding: 25px; color: #666; }
     </div>
 </section>
 
-<section class="experience">
-    <h2>Experience</h2>
-    <div>
-        <h3>Frontend Developer Intern</h3>
-        <p>Data Visualization Team – Obafemi Awolowo University</p>
-        <ul>
-            <li>Built interactive dashboards using HTML, CSS, JS, and Python.</li>
-            <li>Integrated APIs for real-time data visualization.</li>
-            <li>Optimized UI for responsiveness and performance.</li>
-        </ul>
+<section id="experience" data-aos="fade-up">
+  <h2>Experience</h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <h3>Frontend Developer Intern</h3>
+      <p>Abiola Ajimobi Technical University, Summer 2025</p>
+      <p>Worked on interactive dashboards, responsive UI, and project optimization.</p>
     </div>
+    <div class="timeline-item">
+      <h3>Freelance Web Developer</h3>
+      <p>Various Clients, 2024-2025</p>
+      <p>Built responsive websites and e-commerce platforms for small businesses.</p>
+    </div>
+  </div>
 </section>
 
 <section class="testimonials">
