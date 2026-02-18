@@ -4,28 +4,88 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Olosunde Glory Oluwaferanmi | Portfolio</title>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
+    :root {
+        --primary: #0a2540;
+        --secondary: #1f4e79;
+        --accent: #f2b33d;
+        --light-bg: #f5f7fa;
+        --dark-bg: #121212;
+        --light-text: #333;
+        --dark-text: #eee;
+    }
+
     body {
         margin: 0;
         font-family: Arial, sans-serif;
-        background: #f5f7fa;
-        color: #333;
+        background: var(--light-bg);
+        color: var(--light-text);
+        scroll-behavior: smooth;
+        transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark {
+        background: var(--dark-bg);
+        color: var(--dark-text);
     }
 
     header {
-        background: linear-gradient(135deg, #0a2540, #1f4e79);
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
         color: white;
         text-align: center;
         padding: 60px 20px;
+        position: relative;
     }
 
     header img {
-        width: 120px;
-        height: 120px;
+        width: 130px;
+        height: 130px;
         border-radius: 50%;
         object-fit: cover;
         border: 4px solid white;
+        transition: transform 0.3s;
+    }
+
+    header img:hover {
+        transform: scale(1.1);
+    }
+
+    header h1 {
+        margin-top: 15px;
+        font-size: 2.5em;
+        animation: fadeInDown 1s;
+    }
+
+    header p {
+        font-size: 1.2em;
+        margin: 10px 0 20px;
+        animation: fadeIn 1.5s;
+    }
+
+    header .btn {
+        display: inline-block;
+        margin: 10px 5px;
+        padding: 10px 20px;
+        background: var(--accent);
+        color: var(--primary);
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: 0.3s;
+    }
+
+    header .btn:hover {
+        background: #e6a82d;
+    }
+
+    header .toggle-theme {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        cursor: pointer;
+        font-size: 1.5em;
+        color: white;
     }
 
     section {
@@ -35,15 +95,22 @@
         background: white;
         border-radius: 10px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark section {
+        background: #1e1e1e;
+        color: var(--dark-text);
     }
 
     h2 {
-        color: #0a2540;
+        color: var(--primary);
+        margin-bottom: 15px;
     }
 
     .projects {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 20px;
     }
 
@@ -51,6 +118,42 @@
         padding: 15px;
         border-radius: 8px;
         background: #eef3f8;
+        transition: transform 0.3s, box-shadow 0.3s;
+        animation: fadeInUp 1s;
+    }
+
+    body.dark .card {
+        background: #292929;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .card h3 {
+        margin-top: 0;
+        color: var(--primary);
+    }
+
+    .card ul {
+        padding-left: 20px;
+    }
+
+    .card a {
+        display: inline-block;
+        margin-top: 10px;
+        margin-right: 5px;
+        padding: 6px 12px;
+        background: var(--primary);
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: 0.3s;
+    }
+
+    .card a:hover {
+        background: var(--secondary);
     }
 
     footer {
@@ -60,30 +163,75 @@
     }
 
     a {
-        color: #1f4e79;
+        color: var(--primary);
         text-decoration: none;
         font-weight: bold;
     }
+
+    .skills ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .skills li {
+        background: var(--primary);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .social-links a {
+        margin-right: 10px;
+        font-size: 1.4em;
+        color: var(--primary);
+        transition: 0.3s;
+    }
+
+    .social-links a:hover {
+        color: var(--accent);
+    }
+
+    @keyframes fadeInDown {
+        from {opacity:0; transform: translateY(-20px);}
+        to {opacity:1; transform: translateY(0);}
+    }
+
+    @keyframes fadeIn {
+        from {opacity:0;}
+        to {opacity:1;}
+    }
+
+    @keyframes fadeInUp {
+        from {opacity:0; transform: translateY(20px);}
+        to {opacity:1; transform: translateY(0);}
+    }
+
 </style>
 </head>
 
 <body>
 
 <header>
-    <!-- CHANGE YOUR PROFILE IMAGE -->
+    <i class="fas fa-moon toggle-theme" id="themeToggle"></i>
     <img src="JPEG_20251030_235705_4825860734718340709.jpg" alt="Profile Photo">
     <h1>Olosunde Glory Oluwaferanmi</h1>
-    <p>Frontend Developer | Web Enthusiast</p>
+    <p>Frontend Developer | Web Enthusiast | Building Interactive & Responsive Websites</p>
+    <a class="btn" href="OlosundeGloryResume.pdf" download>Download Resume</a>
+    <a class="btn" href="#projects">View Projects</a>
 </header>
 
 <section>
     <h2>About Me</h2>
     <p>
-        Hi, I’m Olosunde Glory Oluwaferanmi, a Frontend Developer and web enthusiast from Nigeria. I build clean, responsive websites and interactive dashboards that help people understand data. I love solving problems with code and learning new technologies to make the web smarter and more beautiful.
+        Hi, I’m Olosunde Glory Oluwaferanmi, a Frontend Developer from Nigeria. I build clean, responsive websites and interactive dashboards that help people understand data. I love solving problems with code and learning new technologies to make the web smarter and more beautiful.
     </p>
 </section>
 
-<section>
+<section class="skills">
     <h2>Skills</h2>
     <ul>
         <li>HTML</li>
@@ -93,43 +241,64 @@
     </ul>
 </section>
 
-<section>
+<section id="projects">
     <h2>Projects</h2>
     <div class="projects">
         <div class="card">
-            <h3>Project 1</h3>
-            <p>ShopEase – E-Commerce Website
-A modern, responsive online store built with HTML, CSS, and JavaScript, featuring dynamic product listings, interactive shopping cart, user reviews, and a secure admin panel for managing products and orders. Fully animated and optimized for a smooth shopping experience across all devices.</p>
-            <a href="https://shopease-pi-ten.vercel.app/shop.html">View Project</a>
+            <h3>ShopEase – E-Commerce Website</h3>
+            <p>A modern, responsive online store built with HTML, CSS, and JavaScript, featuring dynamic product listings, interactive shopping cart, user reviews, and a secure admin panel. Fully animated and optimized for all devices.</p>
+            <ul>
+                <li>HTML, CSS, JavaScript</li>
+                <li>Responsive Design</li>
+                <li>Admin Panel</li>
+            </ul>
+            <a href="https://shopease-pi-ten.vercel.app/shop.html" target="_blank">Live Demo</a>
+            <a href="https://github.com/dashboard" target="_blank">GitHub</a>
         </div>
-
         <div class="card">
             <h3>Project 2</h3>
             <p>Describe your project here.</p>
-            <a href="#">View Project</a>
+            <ul>
+                <li>Technologies Used</li>
+            </ul>
+            <a href="#" target="_blank">Live Demo</a>
+            <a href="#" target="_blank">GitHub</a>
         </div>
-
         <div class="card">
             <h3>Project 3</h3>
             <p>Describe your project here.</p>
-            <a href="#">View Project</a>
+            <ul>
+                <li>Technologies Used</li>
+            </ul>
+            <a href="#" target="_blank">Live Demo</a>
+            <a href="#" target="_blank">GitHub</a>
         </div>
     </div>
 </section>
 
 <section>
     <h2>Contact</h2>
-    <p>Email: gloryolosunde14@gmail.com</p>
-    <p>LinkedIn: <a href="https://www.linkedin.com/in/olosunde-glory-8b2945283?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app">My LinkedIn Link</a></p>
-    <p>GitHub: <a href="https://github.com/dashboard">My GitHub Link</a></p>
-    <p>Facebook: <a href="https://www.facebook.com/glory.olosunde.92">My Facebook Link</a></p>
-    <p>Instagram: <a href="http://instagram.com/olosundeglory?igsh=zndlm20wegs5bnfz">My Instagram Link</a></p>
-    <p>Twitter(x): <a href="https://x.com/AOlosunde57306">My X Link</a></p>
+    <div class="social-links">
+        <a href="mailto:gloryolosunde14@gmail.com"><i class="fas fa-envelope"></i></a>
+        <a href="https://www.linkedin.com/in/olosunde-glory-8b2945283" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="https://github.com/dashboard" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://www.facebook.com/glory.olosunde.92" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="http://instagram.com/olosundeglory?igsh=zndlm20wegs5bnfz" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://x.com/AOlosunde57306" target="_blank"><i class="fab fa-twitter"></i></a>
+    </div>
 </section>
 
 <footer>
     <p>© 2026 Olosunde Glory Oluwaferanmi</p>
 </footer>
+
+<script>
+    const toggle = document.getElementById('themeToggle');
+    toggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        toggle.classList.toggle('fa-sun');
+    });
+</script>
 
 </body>
 </html>
