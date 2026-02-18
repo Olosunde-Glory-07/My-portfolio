@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin CMS | Olosunde Glory Portfolio</title>
+<style>
+body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; margin:0; padding:20px; }
+.container { max-width: 900px; margin:auto; background:white; padding:20px; border-radius:10px; }
+h1 { text-align:center; color:#0a2540; }
+input, textarea { width:100%; padding:10px; margin:8px 0; border-radius:6px; border:1px solid #ccc; }
+button { padding:10px 20px; background:#1f4e79; color:white; border:none; border-radius:6px; cursor:pointer; margin-top:10px; }
+button:hover { background:#0a2540; }
+.section { margin-bottom:30px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>Portfolio Admin Dashboard</h1>
+
+<div class="section">
+<h2>About Me</h2>
+<textarea id="aboutText" rows="5"></textarea>
+<button onclick="saveAbout()">Save About</button>
+</div>
+
+<div class="section">
+<h2>Skills (comma separated)</h2>
+<input id="skillsInput" type="text" placeholder="HTML,CSS,JS,Python">
+<button onclick="saveSkills()">Save Skills</button>
+</div>
+
+<div class="section">
+<h2>Resume Link</h2>
+<input id="resumeInput" type="text" placeholder="Link to Resume PDF">
+<button onclick="saveResume()">Save Resume</button>
+</div>
+
+<div class="section">
+<h2>Admin Password</h2>
+<input id="adminPassword" type="password" placeholder="Enter your password">
+</div>
+
+</div>
+
+<script>
+const API_GET = '/.netlify/functions/getContent';
+const API_UPDATE = '/.netlify/functions/updateContent';
+
+async function fetchContent(section) {
+    const res = await fetch(`${API_GET}?section=${section}`);
+    if(res.ok) return res.json();
+    return null;
+}
+
+async function saveContent(section, content) {
+    const password = document.getElementById('adminPassword').value;
+    const res = await fetch(API_UPDATE, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({section, content, password})
+    });
+    if(res.ok) alert(section + " saved successfully!");
+    else alert("Error saving " + section);
+}
+
+// Load current content
+window.onload = async () => {
+    const about = await fetchContent('about');
+    if(about) document.getElementById('aboutText').value = about.text;
+
+    const skills = await fetchContent('skills');
+    if(skills) document.getElementById('skillsInput').value = skills.skills.join(',');
+
+    const resume = await fetchContent('resume');
+    if(resume) document.getElementById('resumeInput').value = resume.link;
+}
+
+// Save functions
+function saveAbout() {
+    const text = document.getElementById('aboutText').value;
+    saveContent('about', {text});
+}
+
+function saveSkills() {
+    const skills = document.getElementById('skillsInput').value.split(',').map(s => s.trim());
+    saveContent('skills', {skills});
+}
+
+function saveResume() {
+    const link = document.getElementById('resumeInput').value;
+    saveContent('resume', {link});
+}
+</script>
+
+</body>
+</html>
