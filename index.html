@@ -217,6 +217,65 @@
         color: var(--accent);
     }
 
+    .skills {
+    max-width: 900px;
+    margin: 40px auto;
+    text-align: center;
+}
+
+.skills h2 {
+    color: #0a2540;
+    margin-bottom: 20px;
+    font-size: 28px;
+    position: relative;
+}
+
+.skills h2::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: #1f4e79;
+    margin: 8px auto 0 auto;
+    border-radius: 2px;
+}
+
+.skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.skill {
+    background: linear-gradient(135deg, #1f4e79, #0a2540);
+    color: white;
+    font-weight: bold;
+    padding: 12px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.skill i {
+    font-size: 20px;
+}
+
+/* Hover effect */
+.skill:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Optional: different colors per skill */
+.skill:nth-child(1) { background: #e34f26; } /* HTML Orange */
+.skill:nth-child(2) { background: #264de4; } /* CSS Blue */
+.skill:nth-child(3) { background: #f7df1e; color: #000; } /* JS Yellow */
+.skill:nth-child(4) { background: #306998; } /* Python Blue */
+
     footer {
         text-align: center;
         padding: 20px;
@@ -259,12 +318,20 @@
 
 <section class="skills">
     <h2>Skills</h2>
-    <ul>
-        <li><i class="fa-brands fa-html5"></i> HTML</li>
-        <li><i class="fa-brands fa-css3-alt"></i> CSS / Tailwind</li>
-        <li><i class="fa-brands fa-js"></i> JavaScript</li>
-        <li><i class="fa-brands fa-python"></i> Python</li>
-    </ul>
+    <div class="skill-list">
+        <div class="skill">
+            <i class="fa-brands fa-html5"></i> HTML
+        </div>
+        <div class="skill">
+            <i class="fa-brands fa-css3-alt"></i> CSS / Tailwind
+        </div>
+        <div class="skill">
+            <i class="fa-brands fa-js"></i> JavaScript
+        </div>
+        <div class="skill">
+            <i class="fa-brands fa-python"></i> Python
+        </div>
+    </div>
 </section>
 
 <section id="projects">
