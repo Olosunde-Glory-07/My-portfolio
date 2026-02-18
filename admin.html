@@ -45,8 +45,8 @@ button:hover { background:#0a2540; }
 </div>
 
 <script>
-const API_GET = '/.netlify/functions/getContent';
-const API_UPDATE = '/.netlify/functions/updateContent';
+const API_GET = '/getContent';
+const API_UPDATE = '/updateContent';
 
 async function fetchContent(section) {
     const res = await fetch(`${API_GET}?section=${section}`);
