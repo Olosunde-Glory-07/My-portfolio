@@ -108,66 +108,6 @@
         margin-bottom: 15px;
     }
 
-    .projects {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
-    }
-
-    .card {
-        padding: 15px;
-        border-radius: 8px;
-        background: #eef3f8;
-        transition: transform 0.3s, box-shadow 0.3s;
-        animation: fadeInUp 1s;
-    }
-
-    body.dark .card {
-        background: #292929;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    }
-
-    .card h3 {
-        margin-top: 0;
-        color: var(--primary);
-    }
-
-    .card ul {
-        padding-left: 20px;
-    }
-
-    .card a {
-        display: inline-block;
-        margin-top: 10px;
-        margin-right: 5px;
-        padding: 6px 12px;
-        background: var(--primary);
-        color: white;
-        text-decoration: none;
-        border-radius: 4px;
-        transition: 0.3s;
-    }
-
-    .card a:hover {
-        background: var(--secondary);
-    }
-
-    footer {
-        text-align: center;
-        padding: 20px;
-        color: #666;
-    }
-
-    a {
-        color: var(--primary);
-        text-decoration: none;
-        font-weight: bold;
-    }
-
     .skills ul {
         display: flex;
         flex-wrap: wrap;
@@ -184,6 +124,88 @@
         font-weight: bold;
     }
 
+    .projects {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+    }
+
+    .projects .card {
+        cursor: pointer;
+        overflow: hidden;
+        padding: 15px;
+        border-radius: 8px;
+        background: #eef3f8;
+        transition: transform 0.3s, box-shadow 0.3s;
+        animation: fadeInUp 1s;
+    }
+
+    body.dark .projects .card {
+        background: #292929;
+    }
+
+    .projects .card:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+    }
+
+    .card h3 {
+        margin-top: 10px;
+        color: var(--primary);
+    }
+
+    .project-img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    /* Modal styling */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        overflow: auto;
+        background: rgba(0,0,0,0.7);
+        animation: fadeIn 0.3s;
+    }
+
+    .modal-content {
+        background: white;
+        margin: 60px auto;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 700px;
+        position: relative;
+        text-align: center;
+    }
+
+    body.dark .modal-content {
+        background: #1e1e1e;
+        color: var(--dark-text);
+    }
+
+    .modal-content img.modal-img {
+        max-width: 100%;
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
+
+    .modal-content .btn {
+        margin: 5px;
+    }
+
+    .close {
+        position: absolute;
+        top: 10px; right: 20px;
+        font-size: 1.5em;
+        cursor: pointer;
+    }
+
     .social-links a {
         margin-right: 10px;
         font-size: 1.4em;
@@ -193,6 +215,12 @@
 
     .social-links a:hover {
         color: var(--accent);
+    }
+
+    footer {
+        text-align: center;
+        padding: 20px;
+        color: #666;
     }
 
     @keyframes fadeInDown {
@@ -209,12 +237,10 @@
         from {opacity:0; transform: translateY(20px);}
         to {opacity:1; transform: translateY(0);}
     }
-
 </style>
 </head>
 
 <body>
-
 <header>
     <i class="fas fa-moon toggle-theme" id="themeToggle"></i>
     <img src="JPEG_20251030_235705_4825860734718340709.jpg" alt="Profile Photo">
@@ -244,34 +270,34 @@
 <section id="projects">
     <h2>Projects</h2>
     <div class="projects">
-        <div class="card">
+        <div class="card" onclick="openModal(0)">
+            <img src="shopease-thumbnail.jpg" alt="ShopEase" class="project-img">
             <h3>ShopEase – E-Commerce Website</h3>
-            <p>A modern, responsive online store built with HTML, CSS, and JavaScript, featuring dynamic product listings, interactive shopping cart, user reviews, and a secure admin panel. Fully animated and optimized for all devices.</p>
-            <ul>
-                <li>HTML, CSS, JavaScript</li>
-                <li>Responsive Design</li>
-                <li>Admin Panel</li>
-            </ul>
-            <a href="https://shopease-pi-ten.vercel.app/shop.html" target="_blank">Live Demo</a>
-            <a href="https://github.com/dashboard" target="_blank">GitHub</a>
+            <p>Responsive online store with dynamic products, shopping cart, reviews, and admin panel.</p>
         </div>
-        <div class="card">
+
+        <div class="card" onclick="openModal(1)">
+            <img src="project2-thumbnail.jpg" alt="Project 2" class="project-img">
             <h3>Project 2</h3>
             <p>Describe your project here.</p>
-            <ul>
-                <li>Technologies Used</li>
-            </ul>
-            <a href="#" target="_blank">Live Demo</a>
-            <a href="#" target="_blank">GitHub</a>
         </div>
-        <div class="card">
+
+        <div class="card" onclick="openModal(2)">
+            <img src="project3-thumbnail.jpg" alt="Project 3" class="project-img">
             <h3>Project 3</h3>
             <p>Describe your project here.</p>
-            <ul>
-                <li>Technologies Used</li>
-            </ul>
-            <a href="#" target="_blank">Live Demo</a>
-            <a href="#" target="_blank">GitHub</a>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <img id="modalImg" src="" alt="" class="modal-img">
+            <p id="modalDesc"></p>
+            <a id="modalDemo" href="#" target="_blank" class="btn">Live Demo</a>
+            <a id="modalGit" href="#" target="_blank" class="btn">GitHub</a>
         </div>
     </div>
 </section>
@@ -293,12 +319,65 @@
 </footer>
 
 <script>
-    const toggle = document.getElementById('themeToggle');
-    toggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark');
-        toggle.classList.toggle('fa-sun');
-    });
+const toggle = document.getElementById('themeToggle');
+toggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    toggle.classList.toggle('fa-sun');
+});
+
+// Project Modal
+const projects = [
+    {
+        title: "ShopEase – E-Commerce Website",
+        img: "shopease-thumbnail.jpg",
+        desc: "Responsive online store with dynamic products, shopping cart, reviews, and admin panel.",
+        demo: "https://shopease-pi-ten.vercel.app/shop.html",
+        git: "https://github.com/dashboard"
+    },
+    {
+        title: "Project 2",
+        img: "project2-thumbnail.jpg",
+        desc: "Describe your project here.",
+        demo: "#",
+        git: "#"
+    },
+    {
+        title: "Project 3",
+        img: "project3-thumbnail.jpg",
+        desc: "Describe your project here.",
+        demo: "#",
+        git: "#"
+    }
+];
+
+function openModal(index){
+    const modal = document.getElementById("projectModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalImg = document.getElementById("modalImg");
+    const modalDesc = document.getElementById("modalDesc");
+    const modalDemo = document.getElementById("modalDemo");
+    const modalGit = document.getElementById("modalGit");
+
+    modalTitle.innerText = projects[index].title;
+    modalImg.src = projects[index].img;
+    modalDesc.innerText = projects[index].desc;
+    modalDemo.href = projects[index].demo;
+    modalGit.href = projects[index].git;
+
+    modal.style.display = "block";
+}
+
+function closeModal(){
+    document.getElementById("projectModal").style.display = "none";
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById("projectModal");
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
 </script>
 
 </body>
-</html>
+                </html>
