@@ -276,6 +276,61 @@
 .skill:nth-child(3) { background: #f7df1e; color: #000; } /* JS Yellow */
 .skill:nth-child(4) { background: #306998; } /* Python Blue */
 
+.contact {
+    text-align: center;
+    margin: 50px 0;
+}
+
+.contact h2 {
+    color: #0a2540;
+    font-size: 28px;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.contact h2::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: #1f4e79;
+    margin: 8px auto 0 auto;
+    border-radius: 2px;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.social-links a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    color: white;
+    font-size: 22px;
+    text-decoration: none;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.social-links a:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* Platform-specific colors */
+.social-links a[href^="mailto"] { background: #e34f26; } /* Orange for email */
+.social-links a[href*="linkedin"] { background: #0077b5; } /* LinkedIn Blue */
+.social-links a[href*="github"] { background: #333; } /* GitHub Black */
+.social-links a[href*="facebook"] { background: #4267B2; } /* Facebook Blue */
+.social-links a[href*="instagram"] { background: #E1306C; } /* Instagram gradient pink */
+.social-links a[href*="x.com"], .social-links a[href*="twitter"] { background: #1DA1F2; } /* X/Twitter Blue */
+    
     footer {
         text-align: center;
         padding: 20px;
@@ -369,8 +424,8 @@
     </div>
 </section>
 
-<section>
-    <h2>Contact</h2>
+<section class="contact">
+    <h2>Contact Me</h2>
     <div class="social-links">
         <a href="mailto:gloryolosunde14@gmail.com"><i class="fas fa-envelope"></i></a>
         <a href="https://www.linkedin.com/in/olosunde-glory-8b2945283" target="_blank"><i class="fab fa-linkedin"></i></a>
