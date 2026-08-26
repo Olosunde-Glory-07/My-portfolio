@@ -510,6 +510,15 @@ footer p{ font-family:var(--font-mono); font-size:.78rem; color:var(--text-faint
         <button type="submit" class="btn btn-primary" id="contactSubmitBtn" style="width:100%; justify-content:center;"><i class="fa-solid fa-paper-plane"></i> Send message</button>
         <p class="form-note" id="contactFormNote">Sent straight to my inbox — no email app required on your end.</p>
       </form>
+
+      <div id="contactSuccess" style="display:none; padding:36px 24px 30px; text-align:center;">
+        <div style="width:56px; height:56px; margin:0 auto 18px; border-radius:50%; background:rgba(52,211,153,0.12); border:1px solid rgba(52,211,153,0.35); display:flex; align-items:center; justify-content:center;">
+          <i class="fa-solid fa-check" style="color:var(--green); font-size:1.3rem;"></i>
+        </div>
+        <h3 style="font-size:1.1rem; margin-bottom:8px;">Message sent</h3>
+        <p style="font-size:.9rem; max-width:34ch; margin:0 auto;">Thanks — that landed straight in my inbox. I'll get back to you soon.</p>
+        <button type="button" class="btn btn-ghost" id="sendAnotherBtn" style="margin-top:22px; font-size:.78rem; padding:10px 18px;">Send another message</button>
+      </div>
     </div>
   </div>
 </section>
@@ -687,7 +696,6 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const form = e.target;
   const btn = document.getElementById('contactSubmitBtn');
-  const note = document.getElementById('contactFormNote');
   const formData = new URLSearchParams(new FormData(form)).toString();
 
   btn.disabled = true;
@@ -701,20 +709,26 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
       body: formData
     });
     if (res.ok) {
-      form.reset();
-      btn.innerHTML = '<i class="fa-solid fa-check"></i> Sent';
-      note.textContent = "Thanks — I'll get back to you soon.";
-      note.style.color = 'var(--green)';
+      form.style.display = 'none';
+      document.getElementById('contactSuccess').style.display = 'block';
     } else {
       throw new Error('Form submission failed');
     }
   } catch (err) {
     btn.innerHTML = originalBtnHtml;
-    note.textContent = "Something went wrong — you can also email me directly at gloryolosunde14@gmail.com.";
-    note.style.color = 'var(--text-faint)';
+    document.getElementById('contactFormNote').textContent =
+      "Something went wrong — you can also email me directly at gloryolosunde14@gmail.com.";
   } finally {
     btn.disabled = false;
   }
+});
+
+document.getElementById('sendAnotherBtn').addEventListener('click', () => {
+  const form = document.getElementById('contactForm');
+  form.reset();
+  form.style.display = 'block';
+  document.getElementById('contactSuccess').style.display = 'none';
+  document.getElementById('contactSubmitBtn').innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send message';
 });
 
 /* ---------- github repos + calendar ---------- */
