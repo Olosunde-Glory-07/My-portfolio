@@ -492,21 +492,23 @@ footer p{ font-family:var(--font-mono); font-size:.78rem; color:var(--text-faint
       <div class="terminal-body">
         <div><span class="prompt">➜</span> <span class="path">~/portfolio</span> ./send-message.sh</div>
       </div>
-      <form id="contactForm" style="padding:0 24px 26px;">
+      <form id="contactForm" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" style="padding:0 24px 26px;">
+        <input type="hidden" name="form-name" value="contact">
+        <p style="display:none;"><label>Don't fill this out if you're human: <input name="bot-field"></label></p>
         <div class="form-field">
           <label for="cf-name">name</label>
-          <input id="cf-name" type="text" placeholder="Your name" required>
+          <input id="cf-name" name="name" type="text" placeholder="Your name" required>
         </div>
         <div class="form-field">
           <label for="cf-email">email</label>
-          <input id="cf-email" type="email" placeholder="you@example.com" required>
+          <input id="cf-email" name="email" type="email" placeholder="you@example.com" required>
         </div>
         <div class="form-field">
           <label for="cf-message">message</label>
-          <textarea id="cf-message" rows="4" placeholder="What are you looking to build?" required></textarea>
+          <textarea id="cf-message" name="message" rows="4" placeholder="What are you looking to build?" required></textarea>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;"><i class="fa-solid fa-paper-plane"></i> Send message</button>
-        <p class="form-note">Opens your email client with this message pre-filled and addressed to gloryolosunde14@gmail.com.</p>
+        <button type="submit" class="btn btn-primary" id="contactSubmitBtn" style="width:100%; justify-content:center;"><i class="fa-solid fa-paper-plane"></i> Send message</button>
+        <p class="form-note" id="contactFormNote">Sent straight to my inbox — no email app required on your end.</p>
       </form>
     </div>
   </div>
@@ -527,8 +529,8 @@ footer p{ font-family:var(--font-mono); font-size:.78rem; color:var(--text-faint
 // Fill these in with your Supabase project's URL and public anon key
 // (Settings -> API in your Supabase dashboard). The anon key is safe to
 // expose client-side — it can only read, never write, thanks to RLS.
-const SUPABASE_URL = 'https://vvvlysbruciqsgqcdyuh.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2dmx5c2JydWNpcXNncWNkeXVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3NzEwMzIsImV4cCI6MjEwMzM0NzAzMn0.BIaraZmBD-e92hiL856SlmOdba_Ej_BbUYyWTKgx1L0';
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
 const SKILL_ICONS = {
   html: 'fa-brands fa-html5', css: 'fa-brands fa-css3-alt', tailwind: 'fa-solid fa-wind',
@@ -680,15 +682,39 @@ document.querySelectorAll('.proj-card').forEach(card => {
   card.addEventListener('mouseleave', () => { card.style.transform = ''; });
 });
 
-/* ---------- contact form -> mailto ---------- */
-document.getElementById('contactForm').addEventListener('submit', (e) => {
+/* ---------- contact form -> Netlify Forms ---------- */
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const name = document.getElementById('cf-name').value;
-  const email = document.getElementById('cf-email').value;
-  const message = document.getElementById('cf-message').value;
-  const subject = encodeURIComponent(`Portfolio inquiry from ${name}`);
-  const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
-  window.location.href = `mailto:gloryolosunde14@gmail.com?subject=${subject}&body=${body}`;
+  const form = e.target;
+  const btn = document.getElementById('contactSubmitBtn');
+  const note = document.getElementById('contactFormNote');
+  const formData = new URLSearchParams(new FormData(form)).toString();
+
+  btn.disabled = true;
+  const originalBtnHtml = btn.innerHTML;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending…';
+
+  try {
+    const res = await fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: formData
+    });
+    if (res.ok) {
+      form.reset();
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Sent';
+      note.textContent = "Thanks — I'll get back to you soon.";
+      note.style.color = 'var(--green)';
+    } else {
+      throw new Error('Form submission failed');
+    }
+  } catch (err) {
+    btn.innerHTML = originalBtnHtml;
+    note.textContent = "Something went wrong — you can also email me directly at gloryolosunde14@gmail.com.";
+    note.style.color = 'var(--text-faint)';
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 /* ---------- github repos + calendar ---------- */
