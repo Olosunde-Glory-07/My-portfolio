@@ -3,90 +3,158 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin CMS | Olosunde Portfolio</title>
+<title>Admin — Olosunde Portfolio CMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
-body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; margin:0; padding:20px; }
-.container { max-width: 900px; margin:auto; background:white; padding:20px; border-radius:10px; }
-h1 { text-align:center; color:#0a2540; }
-input, textarea { width:100%; padding:10px; margin:8px 0; border-radius:6px; border:1px solid #ccc; }
-button { padding:10px 20px; background:#1f4e79; color:white; border:none; border-radius:6px; cursor:pointer; margin-top:10px; }
-button:hover { background:#0a2540; }
-.section { margin-bottom:30px; }
+:root{
+  --bg:#0B1120; --card:#141B2E; --card-2:#101728; --line:rgba(231,236,247,0.09); --line-strong:rgba(231,236,247,0.16);
+  --text:#E7ECF7; --text-dim:#93A0BD; --text-faint:#5B6478; --amber:#F5A623; --cyan:#22D3EE; --green:#34D399; --red:#F87171;
+  --font-display:'Space Grotesk',sans-serif; --font-body:'Inter',sans-serif; --font-mono:'JetBrains Mono',monospace;
+}
+*{ box-sizing:border-box; }
+body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body); padding:48px 24px 80px; }
+.wrap{ max-width:760px; margin:0 auto; }
+.top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:36px; }
+h1{ font-family:var(--font-display); font-size:1.6rem; margin:0; }
+.status-pill{ font-family:var(--font-mono); font-size:.75rem; padding:6px 14px; border-radius:20px; border:1px solid var(--line); color:var(--text-faint); }
+.status-pill.ok{ color:var(--green); border-color:rgba(52,211,153,.35); }
+
+.card{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:26px; margin-bottom:22px; }
+.card-head{ display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.card-head i{ color:var(--amber); }
+.card-head h2{ font-family:var(--font-mono); font-size:.95rem; font-weight:600; margin:0; color:var(--text); }
+.hint{ font-family:var(--font-mono); font-size:.72rem; color:var(--text-faint); margin:6px 0 14px; }
+
+label{ display:block; font-family:var(--font-mono); font-size:.78rem; color:var(--text-faint); margin-bottom:7px; }
+input, textarea{
+  width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--line-strong); background:var(--card-2);
+  color:var(--text); font-family:var(--font-body); font-size:.92rem; resize:vertical;
+}
+input:focus, textarea:focus{ outline:none; border-color:var(--amber); }
+
+button{
+  font-family:var(--font-mono); font-size:.82rem; padding:11px 20px; border-radius:9px; border:1px solid transparent;
+  background:var(--amber); color:#160F02; cursor:pointer; margin-top:14px; transition:transform .2s ease, opacity .2s ease;
+}
+button:hover{ transform:translateY(-2px); }
+button:disabled{ opacity:.5; cursor:not-allowed; transform:none; }
+
+.password-card{ border-color:rgba(245,166,35,0.3); }
+.msg{ font-family:var(--font-mono); font-size:.78rem; margin-top:10px; min-height:1.2em; }
+.msg.ok{ color:var(--green); } .msg.err{ color:var(--red); }
 </style>
 </head>
 <body>
+<div class="wrap">
+  <div class="top">
+    <h1>Portfolio CMS</h1>
+    <span class="status-pill" id="configStatus">checking config…</span>
+  </div>
 
-<div class="container">
-<h1>Portfolio Admin Dashboard</h1>
+  <div class="card password-card">
+    <div class="card-head"><i class="fa-solid fa-lock"></i><h2>admin_password</h2></div>
+    <p class="hint">Required to save any change below. Never stored or logged — sent once per save and checked server-side.</p>
+    <input id="adminPassword" type="password" placeholder="Enter your admin password">
+  </div>
 
-<div class="section">
-<h2>About Me</h2>
-<textarea id="aboutText" rows="5"></textarea>
-<button onclick="saveAbout()">Save About</button>
-</div>
+  <div class="card">
+    <div class="card-head"><i class="fa-regular fa-file-lines"></i><h2>about.md</h2></div>
+    <label for="aboutText">About text (one paragraph per line)</label>
+    <textarea id="aboutText" rows="5"></textarea>
+    <button onclick="saveAbout()" id="btnAbout">Save about</button>
+    <div class="msg" id="msgAbout"></div>
+  </div>
 
-<div class="section">
-<h2>Skills (comma separated)</h2>
-<input id="skillsInput" type="text" placeholder="HTML,CSS,JS,Python">
-<button onclick="saveSkills()">Save Skills</button>
-</div>
+  <div class="card">
+    <div class="card-head"><i class="fa-solid fa-tags"></i><h2>skills.json</h2></div>
+    <label for="skillsInput">Skills (comma separated)</label>
+    <input id="skillsInput" type="text" placeholder="HTML, CSS, JavaScript, Python, Git, Figma">
+    <button onclick="saveSkills()" id="btnSkills">Save skills</button>
+    <div class="msg" id="msgSkills"></div>
+  </div>
 
-<div class="section">
-<h2>Resume Link</h2>
-<input id="resumeInput" type="text" placeholder="Link to Resume PDF">
-<button onclick="saveResume()">Save Resume</button>
-</div>
-
-<div class="section">
-<h2>Admin Password</h2>
-<input id="adminPassword" type="password" placeholder="Enter your password">
-</div>
-
+  <div class="card">
+    <div class="card-head"><i class="fa-solid fa-file-arrow-down"></i><h2>resume.link</h2></div>
+    <label for="resumeInput">Link to resume PDF</label>
+    <input id="resumeInput" type="text" placeholder="https://... or Olosunde_Glory_Recruiter_Level_CV.pdf">
+    <button onclick="saveResume()" id="btnResume">Save resume link</button>
+    <div class="msg" id="msgResume"></div>
+  </div>
 </div>
 
 <script>
-const API_GET = '/.netlify/functions/getContent';
+// Fill these in with your Supabase project's URL and public anon key.
+// Reads only — writes go through the Netlify function with the service role key.
+const SUPABASE_URL = 'https://vvvlysbruciqsgqcdyuh.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2dmx5c2JydWNpcXNncWNkeXVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3NzEwMzIsImV4cCI6MjEwMzM0NzAzMn0.BIaraZmBD-e92hiL856SlmOdba_Ej_BbUYyWTKgx1L0';
+
+const configStatus = document.getElementById('configStatus');
+let supa = null;
+if(!SUPABASE_URL.includes('YOUR_') && !SUPABASE_ANON_KEY.includes('YOUR_')){
+  supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  configStatus.textContent = 'connected';
+  configStatus.classList.add('ok');
+} else {
+  configStatus.textContent = 'not configured';
+}
+
 const API_UPDATE = '/.netlify/functions/updateContent';
 
-// Fetch content
-async function fetchContent(section) {
-    const res = await fetch(`${API_GET}?section=${section}`);
-    if(res.ok) return res.json();
-    return null;
+async function fetchContent(section){
+  if(!supa) return null;
+  const { data, error } = await supa.from('content').select('data').eq('section', section).maybeSingle();
+  if(error || !data) return null;
+  return data.data;
 }
 
-// Save content
-async function saveContent(section, content) {
-    const password = document.getElementById('adminPassword').value;
+async function saveContent(section, content, btnId, msgId){
+  const password = document.getElementById('adminPassword').value;
+  const btn = document.getElementById(btnId);
+  const msg = document.getElementById(msgId);
+  if(!password){ msg.textContent = 'Enter the admin password first.'; msg.className = 'msg err'; return; }
+  btn.disabled = true; msg.textContent = 'Saving…'; msg.className = 'msg';
+  try{
     const res = await fetch(API_UPDATE, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({section, content, password})
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ section, content, password })
     });
-    if(res.ok) alert(section + " saved successfully!");
-    else alert("Error saving " + section);
+    const body = await res.json().catch(() => ({}));
+    if(res.ok){
+      msg.textContent = 'Saved.'; msg.className = 'msg ok';
+    } else {
+      msg.textContent = body.error || 'Save failed.'; msg.className = 'msg err';
+    }
+  } catch(err){
+    msg.textContent = 'Network error — is the function deployed?'; msg.className = 'msg err';
+  } finally {
+    btn.disabled = false;
+  }
 }
 
-// Load existing content
-window.onload = async () => {
-    const about = await fetchContent('about');
-    if(about) document.getElementById('aboutText').value = about.text;
-
-    const skills = await fetchContent('skills');
-    if(skills) document.getElementById('skillsInput').value = skills.skills.join(',');
-
-    const resume = await fetchContent('resume');
-    if(resume) document.getElementById('resumeInput').value = resume.link;
+function saveAbout(){
+  saveContent('about', { text: document.getElementById('aboutText').value }, 'btnAbout', 'msgAbout');
+}
+function saveSkills(){
+  const skills = document.getElementById('skillsInput').value.split(',').map(s => s.trim()).filter(Boolean);
+  saveContent('skills', { skills }, 'btnSkills', 'msgSkills');
+}
+function saveResume(){
+  saveContent('resume', { link: document.getElementById('resumeInput').value }, 'btnResume', 'msgResume');
 }
 
-// Save functions
-function saveAbout() { saveContent('about', {text: document.getElementById('aboutText').value}); }
-function saveSkills() { 
-    const skills = document.getElementById('skillsInput').value.split(',').map(s => s.trim());
-    saveContent('skills', {skills}); 
-}
-function saveResume() { saveContent('resume', {link: document.getElementById('resumeInput').value}); }
+window.addEventListener('DOMContentLoaded', async () => {
+  const about = await fetchContent('about');
+  if(about?.text) document.getElementById('aboutText').value = about.text;
+
+  const skills = await fetchContent('skills');
+  if(skills?.skills) document.getElementById('skillsInput').value = skills.skills.join(', ');
+
+  const resume = await fetchContent('resume');
+  if(resume?.link) document.getElementById('resumeInput').value = resume.link;
+});
 </script>
-
 </body>
 </html>

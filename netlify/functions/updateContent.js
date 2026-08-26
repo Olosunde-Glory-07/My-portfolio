@@ -1,31 +1,59 @@
-import pkg from 'pg';
-const { Pool } = pkg;
+const { createClient } = require('@supabase/supabase-js');
+const bcrypt = require('bcryptjs');
 
-const pool = new Pool({ connectionString: process.env.NEON_DATABASE_URL });
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY // service role key: server-side only, bypasses RLS
+);
 
-export async function handler(event, context) {
-    try {
-        const { section, content, password } = JSON.parse(event.body);
+const VALID_SECTIONS = ['about', 'skills', 'resume'];
 
-        // Check admin password
-        if (password !== process.env.ADMIN_PASSWORD) {
-            return { statusCode: 401, body: 'Unauthorized' };
-        }
+exports.handler = async (event) => {
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
+  }
 
-        const contentString = JSON.stringify(content);
+  let body;
+  try {
+    body = JSON.parse(event.body || '{}');
+  } catch {
+    return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON body' }) };
+  }
 
-        // Insert or update the content
-        await pool.query(
-            `INSERT INTO portfolio_content (section, content)
-             VALUES ($1, $2)
-             ON CONFLICT (section)
-             DO UPDATE SET content = $2`,
-            [section, contentString]
-        );
+  const { section, content, password } = body;
 
-        return { statusCode: 200, body: 'Success' };
-    } catch (err) {
-        console.error(err);
-        return { statusCode: 500, body: JSON.stringify(err.message) };
-    }
-}
+  if (!section || content === undefined || !password) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'Missing section, content, or password' }) };
+  }
+  if (!VALID_SECTIONS.includes(section)) {
+    return { statusCode: 400, body: JSON.stringify({ error: 'Unknown section' }) };
+  }
+
+  const passwordHash = process.env.ADMIN_PASSWORD_HASH;
+  if (!passwordHash) {
+    return { statusCode: 500, body: JSON.stringify({ error: 'Server missing ADMIN_PASSWORD_HASH' }) };
+  }
+
+  let passwordOk = false;
+  try {
+    passwordOk = await bcrypt.compare(password, passwordHash);
+  } catch {
+    return { statusCode: 500, body: JSON.stringify({ error: 'Password check failed' }) };
+  }
+  if (!passwordOk) {
+    return { statusCode: 401, body: JSON.stringify({ error: 'Incorrect password' }) };
+  }
+
+  try {
+    const { error } = await supabase
+      .from('content')
+      .upsert(
+        { section, data: content, updated_at: new Date().toISOString() },
+        { onConflict: 'section' }
+      );
+    if (error) throw error;
+    return { statusCode: 200, body: JSON.stringify({ ok: true }) };
+  } catch (err) {
+    return { statusCode: 500, body: JSON.stringify({ error: err.message || 'Database write failed' }) };
+  }
+};
