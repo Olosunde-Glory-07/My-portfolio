@@ -2,5 +2,12 @@
   publish = "."
   functions = "netlify/functions"
 
+[build.environment]
+  # SUPABASE_URL is intentionally embedded in the client-side HTML (the
+  # browser needs it to talk to Supabase directly). It's not a secret —
+  # only SUPABASE_SERVICE_ROLE_KEY and ADMIN_PASSWORD_HASH are, and those
+  # never appear in any HTML file, so the scanner still checks for those.
+  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_URL"
+
 [functions]
   node_bundler = "esbuild"
